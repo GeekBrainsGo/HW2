@@ -14,9 +14,11 @@ import (
 func FilterContentType(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Filtering requests by MIME type
-		if r.Header.Get("Content-type") != "application/json" {
-			render.Render(w, r, ErrUnsupportedFormat)
-			return
+		if r.Method == "POST" { // filter for POST request
+			if r.Header.Get("Content-type") != "application/json" {
+				render.Render(w, r, ErrUnsupportedFormat)
+				return
+			}
 		}
 		next.ServeHTTP(w, r)
 	})
