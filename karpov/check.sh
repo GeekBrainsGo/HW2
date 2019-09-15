@@ -17,6 +17,6 @@ curl -X POST 127.0.0.1:3333/v1/search -H 'Content-type: application/json' \
 
 ## COOKIES
 # set COOKIES
-curl -v -c ./cookie-jar.txt http://127.0.0.1:3333/v1/cookies
+curl -v -c ./cookie-jar.txt 'http://127.0.0.1:3333/v1/cookies?username=vasya'
 # get COOKIES
 curl -v -b ./cookie-jar.txt http://127.0.0.1:3333/v1/cookies/data
