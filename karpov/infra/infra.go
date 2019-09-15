@@ -38,6 +38,7 @@ func SearchText(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if len(containSites) == 0 {
+		err = fmt.Errorf("No one resource doesn't contains search text <%s>", params.Search)
 		render.Render(w, r, ErrNotFound(err))
 		return
 	}
