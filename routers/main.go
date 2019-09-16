@@ -19,47 +19,36 @@ import (
 
 const (
 	servAddr    = "localhost:8080"
-	cookieName  = "KlimGo"
-	cookieValue = "GeekBrains"
+	cookieName  = "session_id"
+	cookieValue = "Klim_GeekBrains_Go"
 )
 
-func handleRoot(w http.ResponseWriter, r *http.Request) {
+func mainPage(w http.ResponseWriter, r *http.Request) {
+	session, err := r.Cookie("session_id")
+	loggedIn := err != http.ErrNoCookie
 
-	io.WriteString(w, "/write/...  - write cookie\n/read/...   - read cookie\n/delete/... - delete cookie")
+	if loggedIn {
+		io.WriteString(w, `<a href="/logout">Logout,</a>&nbsp`+session.Value)
+	} else {
+		io.WriteString(w, `<a href="/login">Login</a>, please!`)
+	}
 }
 
-func writeCookie(w http.ResponseWriter, r *http.Request) {
-
+func loginPage(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:    cookieName,
 		Value:   cookieValue,
 		Expires: time.Now().AddDate(0, 0, 1),
-		Path:    "/",
 	})
-
-	io.WriteString(w, "cookie written!")
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
-func readCookie(w http.ResponseWriter, r *http.Request) {
-
-	c, err := r.Cookie(cookieName)
-	if err != nil {
-		fmt.Fprintln(w, "error reading cookie:", err)
-		return
-	}
-
-	fmt.Fprintln(w, "read cookie:", c.Name, "=", c.Value)
-}
-
-func deleteCookie(w http.ResponseWriter, r *http.Request) {
-
+func logoutPage(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:   cookieName,
-		Path:   "/",
 		MaxAge: -1,
 	})
-
-	io.WriteString(w, "cookie deleted!")
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 func main() {
@@ -76,10 +65,9 @@ func main() {
 	}()
 
 	// prepare server, no need smart router for simple scenario
-	http.HandleFunc("/", handleRoot)
-	http.HandleFunc("/write/", writeCookie)
-	http.HandleFunc("/read/", readCookie)
-	http.HandleFunc("/delete/", deleteCookie)
+	http.HandleFunc("/", mainPage)
+	http.HandleFunc("/login", loginPage)
+	http.HandleFunc("/logout", logoutPage)
 
 	fmt.Println("Starting server at:", servAddr)
 	log.Fatalln(http.ListenAndServe(servAddr, nil))
