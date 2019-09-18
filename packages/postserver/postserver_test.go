@@ -3,7 +3,6 @@ package postserver
 import (
 	"bytes"
 	"net/http"
-	"net/http/cookiejar"
 	"net/http/httptest"
 	"testing"
 )
@@ -44,7 +43,7 @@ func TestSearch(t *testing.T) {
 	for _, test := range testCases {
 		request, _ := http.NewRequest(test.method, "/", bytes.NewReader(test.search))
 		response := httptest.NewRecorder()
-		cookiejar.New(nil)
+
 		Search(response, request)
 
 		got := response.Body.String()
