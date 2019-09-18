@@ -25,3 +25,13 @@
 #### Для совсем хардкорщиков, гляньте в сторону gRPC (библиотека от гугла):
 1) https://grpc.io/ (Сайт)
 2) https://github.com/grpc/grpc-go (Библиотека для Go)
+
+
+<p>
+
+[postserver](packages/postserver/postserver.go), [postserver_test](packages/postserver/postserver_test.go) - Using function to search from the past practice, build a server that will accept JSON with search request in the POST request and return the response as an array of strings in JSON.
+</p>
+<p>
+
+[cookieserver](packages/cookieserver/cookieserver.go), [cookieserver_test](packages/cookieserver/cookieserver_test.go) - Write two routes: one will record information in a cookie (for example, a name), and the second will receive it and display it in response to a request.
+</p>
