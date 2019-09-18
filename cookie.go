@@ -16,13 +16,13 @@ const (
 func main() {
 	router := chi.NewRouter()
 
-	router.Get("/cookie", sendCookieHandler)
-	router.Post("/cookie", getCookieHandler)
+	router.Get("/cookieset", setCookieHandler)
+	router.Get("/cookieget", getCookieHandler)
 
 	logrus.Fatal(http.ListenAndServe(":8080", router))
 }
 
-func sendCookieHandler(w http.ResponseWriter, r *http.Request) {
+func setCookieHandler(w http.ResponseWriter, r *http.Request) {
 	expiration := time.Now().Add(365 * 24 * time.Hour)
 	cookie := &http.Cookie{
 		Name:    COOKIE_NAME,
