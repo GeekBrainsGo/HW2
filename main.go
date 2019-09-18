@@ -27,6 +27,11 @@ type searchAnswer struct {
 	Sites []string `json:"sites"`
 }
 
+type searchRequest struct {
+	Search string `json:"search"`
+	Urls []string `json:"urls"`
+}
+
 //выаод информации по контакту c работы
 func (searchAnswer *searchAnswer) AddURL(url string) {
 	searchAnswer.Sites = append(searchAnswer.Sites, url)
@@ -36,7 +41,7 @@ func main() {
 	router := chi.NewRouter()
 
 	router.Route("/", func(r chi.Router) {
-		r.Post("/search/{value}", SearchHandler)
+		r.Post("/search", SearchHandler)
 		r.Get("/cookie", GetCookieHandler)
 		r.Post("/cookie/{value}", SetCookieHandler)
 	})
@@ -79,18 +84,16 @@ func SetCookieHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchHandler(w http.ResponseWriter, r *http.Request) {
-	search := chi.URLParam(r, ARG_VALUE)
-	urls := []string{
-		"https://ya.ru",
-		"https://google.com",
-		"https://yandex.ru",
-		"https://yandex.rud",
-		"https://yandeddssxxxx.ru",
+	decoder := json.NewDecoder(r.Body)
+	var sr searchRequest
+	err := decoder.Decode(&sr)
+	if err != nil {
+		respondWithJSON(w, http.StatusBadRequest, err.Error())
+		return
 	}
 
-	var resultSearchAnswer = searchAnswer{search, []string{}}
-
-	findResults := findStringInUrls(search, urls)
+	var resultSearchAnswer = searchAnswer{sr.Search, []string{}}
+	findResults := findStringInUrls(sr.Search, sr.Urls)
 	for _, findResult := range findResults {
 		if findResult.url != "" {
 			resultSearchAnswer.AddURL(findResult.url)
