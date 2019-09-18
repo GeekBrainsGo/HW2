@@ -34,6 +34,5 @@ func TestApp(t *testing.T) {
 	if test != email {
 		t.Fatalf("want: %v, got: %v", email, test)
 	}
-	t.Logf(string(body))
-	t.Logf("want: %v, got: %v", email, test)
+	t.Logf("\nbody: %s\nwant: %v, got: %v", body, email, test)
 }
