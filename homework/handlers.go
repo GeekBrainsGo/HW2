@@ -48,7 +48,7 @@ func (serv *Server) HandlePostAuth(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(fmt.Sprintf("your new cookie: %s", cookie.Value)))
 }
 
-// HandleGetAuth - регистрирует нового пользователя
+// HandleGetAuth - выводит куку обратившегося пользователя
 func (serv *Server) HandleGetAuth(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie(serv.cookieKey)
 	if err != nil {

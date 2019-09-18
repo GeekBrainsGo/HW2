@@ -32,7 +32,7 @@ func (serv *Server) Start() error {
 	return http.ListenAndServe(":8080", r)
 }
 
-// ConfigureHandlers - настраивает пути хендлеры и их пути
+// ConfigureHandlers - настраивает хендлеры и их пути
 func (serv *Server) ConfigureHandlers(r *chi.Mux) {
 	r.Route("/", func(r chi.Router) {
 		r.Post("/search", serv.HandlePostSearch)
@@ -44,15 +44,15 @@ func (serv *Server) ConfigureHandlers(r *chi.Mux) {
 	})
 }
 
-// SendErr - отправляет ошибку 500 пользователю и логирует её
+// SendErr - отправляет ошибку пользователю и логирует её
 func (serv *Server) SendErr(w http.ResponseWriter, err error, code int, obj ...interface{}) {
 	serv.lg.WithField("data", obj).WithError(err).Error("server error")
 	w.WriteHeader(code)
 	errModel := ErrorModel{
-		code:     code,
-		err:      err.Error(),
-		desc:     "server error",
-		internal: obj,
+		Code:     code,
+		Err:      err.Error(),
+		Desc:     "server error",
+		Internal: obj,
 	}
 	data, _ := json.Marshal(errModel)
 	w.Write(data)
