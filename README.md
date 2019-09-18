@@ -15,7 +15,7 @@
 	  
 #### Советую ознакомиться с этими библиотеками для Go:
 1) https://github.com/go-chi/chi (Продвинутые роуты)
-2) https://github.com/Sirupsen/logrus (Продвинутый логгер)
+2) https://github.com/sirupsen/logrus (Продвинутый логгер)
 
 #### Советую почитать про архитектурный подход REST и RESTfull:
 1) https://habr.com/ru/post/38730/ (Кратко о REST)
