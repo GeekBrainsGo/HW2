@@ -1,0 +1,53 @@
+package main
+
+import (
+    "fmt"
+    "encoding/json"
+    "io/ioutil"
+	"net/http"
+	"log"
+)
+
+//структура описывающая запрос
+type Foo struct {
+    Name    string `json:"name"`
+    Age     int    `json:"age"`
+    IsAdmin bool   `json:"isAdmin"`
+}
+
+func main(){
+	router := http.NewServeMux()
+	router.HandleFunc( "/" , requestHandler)
+	
+	log.Fatal(http.ListenAndServe( ":8080" , router))
+}
+
+func requestHandler(w http.ResponseWriter, r *http.Request) {
+
+    var resp Foo
+
+    //читаем тело запроса
+    body, err := ioutil.ReadAll(r.Body)
+    //проверяем на наличие ошибки
+    if err != nil {
+        fmt.Fprintf(w, "err %q\n",  err.Error())
+    } else {
+        //если все нормально - пишем по указателю в структуру
+        err = json.Unmarshal(body, &resp)
+        if err != nil {
+            fmt.Println(w, "can't unmarshal: ", err.Error())
+        }
+	}
+	
+	// resp, err := http.PostForm("https://httpbin.org/post", formData)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+
+	fmt.Println(resp.Name)
+	fmt.Println(resp.Age)
+	fmt.Println(resp.IsAdmin)
+
+    //выводим полученные данные (можно делать с данными все, что угодно)
+    //fmt.Fprintf(w, "Name:", resp.Name, "Age:", resp.Age, "IsAdmin:", resp.IsAdmin)
+}
